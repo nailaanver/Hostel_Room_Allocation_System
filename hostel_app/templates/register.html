@@ -1,0 +1,168 @@
+{% extends 'master.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: url("{% static 'images/bg.jpeg' %}") no-repeat center center/cover;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+    }
+
+    .overlay {
+        background: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+    .register-box {
+        position: relative;
+        width: 420px;
+        padding: 30px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+        z-index: 10;
+        color: white;
+    }
+    .style-box{
+        width: 81%;
+    }
+    .register-box h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #ff5b5b;
+        font-size: 22px;
+        text-transform: uppercase;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+        position: relative;
+    }
+
+    .input-group input,
+    .input-group select {
+        width: 100%;
+        padding: 12px 40px;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+    }
+
+    .input-group .icon {
+        position: absolute;
+        top: 12px;
+        left: 10px;
+        font-size: 18px;
+        color: #ff5b5b;
+    }
+
+    .register-btn {
+        width: 100%;
+        background: #ff4b5c;
+        border: none;
+        padding: 12px;
+        color: white;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .register-btn:hover {
+        background: #ff1c35;
+    }
+
+    .error-msg {
+        color: #ff8080;
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+
+
+<div class="overlay"></div>
+
+<div class="register-box">
+
+    <h2>Sign Up Here</h2>
+
+    <form method="POST" action="{% url 'register_student' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="input-group style-box">
+            <i class="fa-solid fa-id-card icon"></i>
+            <input type="text" name="roll_no" placeholder="Student ID" required>
+        </div>
+
+        <div class="input-group style-box">
+            <i class="fa-solid fa-user icon"></i>
+            <input type="text" name="first_name" placeholder="First Name" required>
+        </div>
+
+        <div class="input-group style-box">
+            <i class="fa-solid fa-user icon"></i>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+        </div>
+
+        <div class="input-group style-box">
+            <i class="fa-solid fa-phone icon"></i>
+            <input type="text" name="mobile_no" placeholder="Mobile No" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-building icon"></i>
+            <select name="department" required>
+                <option disabled selected>Department</option>
+                <option value="BCA">BCA</option>
+                <option value="BCom">BCom</option>
+                <option value="BA English">BA English</option>
+                <option value="BSc CS">BSc CS</option>
+                <option value="BBA">BBA</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-calendar icon"></i>
+            <select name="year_of_study" required>
+                <option disabled selected>Year of Study</option>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-image icon"></i>
+            <input type="file" name="profile_photo" required>
+        </div>
+
+        <div class="input-group style-box">
+            <i class="fa-solid fa-lock icon"></i>
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+
+        <div class="input-group style-box">
+            <i class="fa-solid fa-lock icon"></i>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+        </div>
+
+        <button class="register-btn" type="submit">Register</button>
+    </form>
+
+    {% for msg in messages %}
+        <p class="error-msg">{{ msg }}</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
