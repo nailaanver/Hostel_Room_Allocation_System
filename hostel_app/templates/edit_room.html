@@ -1,0 +1,27 @@
+{% extends 'master.html' %}
+{% block content %}
+
+<h2>Edit Room</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Room Number</label>
+    <input type="text" class="form-control" name="room_number" value="{{ room.room_number }}" required>
+
+    <label>Room Type</label>
+    <select class="form-control" name="room_type">
+        <option {% if room.room_type == 'Single' %}selected{% endif %}>Single</option>
+        <option {% if room.room_type == 'Double' %}selected{% endif %}>Double</option>
+        <option {% if room.room_type == 'Triple' %}selected{% endif %}>Triple</option>
+        <option {% if room.room_type == 'AC' %}selected{% endif %}>AC</option>
+        <option {% if room.room_type == 'Non-AC' %}selected{% endif %}>Non-AC</option>
+    </select>
+
+    <label>Capacity</label>
+    <input type="number" class="form-control" name="capacity" value="{{ room.capacity }}" required>
+
+    <button class="btn btn-success mt-3">Update</button>
+</form>
+
+{% endblock %}

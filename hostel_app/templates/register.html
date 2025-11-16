@@ -159,9 +159,19 @@
         <button class="register-btn" type="submit">Register</button>
     </form>
 
-    {% for msg in messages %}
-        <p class="error-msg">{{ msg }}</p>
-    {% endfor %}
+    </form>
+
+<div style="text-align: center; margin-top: 15px;">
+    <span>Already have an account? </span>
+    <a href="{% url 'login' %}" style="color: #ff5b5b; text-decoration: none; font-weight: bold;">
+        Login
+    </a>
+</div>
+
+{% for msg in messages %}
+    <p class="error-msg">{{ msg }}</p>
+{% endfor %}
+
 
 </div>
 

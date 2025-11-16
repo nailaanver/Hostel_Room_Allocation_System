@@ -1,0 +1,35 @@
+{% extends 'master.html' %}
+{% block content %}
+
+<h2 class="mb-4">Room Management</h2>
+
+<a href="{% url 'add_room' %}" class="btn btn-primary mb-3">Add Room</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Room No</th>
+            <th>Type</th>
+            <th>Capacity</th>
+            <th>Occupied</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for room in rooms %}
+        <tr>
+            <td>{{ room.room_number }}</td>
+            <td>{{ room.room_type }}</td>
+            <td>{{ room.capacity }}</td>
+            <td>{{ room.current_occupancy }}</td>
+            <td>
+                <a href="{% url 'edit_room' room.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'delete_room' room.id %}" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Delete Room?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

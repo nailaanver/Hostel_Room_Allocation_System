@@ -1,9 +1,13 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.shortcuts import render, redirect
-from .models import StudentProfile
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import StudentProfile,Room,Allocation
 from django.contrib.auth import logout
+from django.db import models
+from django.db.models import F
+
+
 
 
 def register_student(request):
@@ -83,4 +87,96 @@ def logout_user(request):
 def student_dashboard(request):
     return render(request,'student_dashboard.html')
 def admin_dashboard(request):
-    return render(request,'admin_dashboard.html')
+    total_rooms = Room.objects.count()
+    occupied_rooms = Room.objects.filter(current_occupancy__gte=1).count()
+    vacant_rooms = Room.objects.filter(current_occupancy__lt=models.F('capacity')).count()
+
+    total_students = StudentProfile.objects.count()
+
+    recent_allocations = Allocation.objects.order_by('-created_at')[:5]
+
+    available_rooms = Room.objects.filter(current_occupancy__lt=F('capacity'))
+    for r in available_rooms:
+        r.remaining_beds = r.capacity - r.current_occupancy
+
+
+    students = StudentProfile.objects.all()
+
+    return render(request, "admin_dashboard.html", {
+        "total_rooms": total_rooms,
+        "occupied_rooms": occupied_rooms,
+        "vacant_rooms": vacant_rooms,
+        "total_students": total_students,
+        "recent_allocations": recent_allocations,
+        "available_rooms": available_rooms,
+        "students": students,
+    })
+
+def assign_room_to_student(request, student_id):
+    student = get_object_or_404(StudentProfile, id=student_id)
+    rooms = Room.objects.filter(current_occupancy__lt=F('capacity'))
+
+    if request.method == "POST":
+        room_id = request.POST.get("room_id")
+        room = get_object_or_404(Room, id=room_id)
+
+        # Update room occupancy
+        room.current_occupancy += 1
+        room.save()
+
+        # Assign room to student
+        student.room = room
+        student.save()
+
+        # Save allocation history
+        Allocation.objects.create(
+            student=student,
+            room=room,
+            allocated_by=request.user
+        )
+
+        return redirect('admin_dashboard')
+
+    return render(request, 'assign_room.html', {'student': student, 'rooms': rooms})
+
+
+# room management
+
+def add_room(request):
+    if request.method == "POST":
+        room_number = request.POST.get("room_number")
+        room_type = request.POST.get("room_type")
+        capacity = request.POST.get("capacity")
+
+        Room.objects.create(
+            room_number=room_number,
+            room_type=room_type,
+            capacity=capacity
+        )
+
+        return redirect('room_list')
+
+    return render(request, "add_room.html")
+
+def room_list(request):
+    rooms = Room.objects.all()
+    return render(request, "room_list.html", {"rooms": rooms})
+
+def edit_room(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+
+    if request.method == "POST":
+        room.room_number = request.POST.get("room_number")
+        room.room_type = request.POST.get("room_type")
+        room.capacity = request.POST.get("capacity")
+        room.save()
+
+        return redirect("room_list")
+
+    return render(request, "edit_room.html", {"room": room})
+
+
+def delete_room(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    room.delete()
+    return redirect("room_list")

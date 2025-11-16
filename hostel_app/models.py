@@ -30,3 +30,53 @@ class StudentProfile(models.Model):
 
     def __str__(self):
         return f"{self.roll_no} - {self.first_name} {self.last_name}"
+
+
+# -------------------------------
+# Room Model
+# -------------------------------
+class Room(models.Model):
+    ROOM_TYPES = (
+        ('Single', 'Single'),
+        ('Double', 'Double'),
+        ('Triple', 'Triple'),
+        ('AC', 'AC'),
+        ('Non-AC', 'Non-AC'),
+    )
+
+    room_number = models.CharField(max_length=20, unique=True)
+    room_type = models.CharField(max_length=20, choices=ROOM_TYPES)
+    capacity = models.IntegerField()
+    current_occupancy = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Room {self.room_number}"
+
+    @property
+    def is_full(self):
+        return self.current_occupancy >= self.capacity
+
+
+# -------------------------------
+# Allocation Model (History)
+# -------------------------------
+class Allocation(models.Model):
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    allocated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="allocated_by")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student.name} → Room {self.room.room_number}"
+
+
+# -------------------------------
+# Optional: Room Maintenance (Extra Feature)
+# -------------------------------
+class Maintenance(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    reason = models.TextField()
+    date = models.DateField()
+
+    def __str__(self):
+        return f"Maintenance - Room {self.room.room_number}"
