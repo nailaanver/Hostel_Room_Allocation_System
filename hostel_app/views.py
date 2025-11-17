@@ -114,30 +114,81 @@ def admin_dashboard(request):
 
 def assign_room_to_student(request, student_id):
     student = get_object_or_404(StudentProfile, id=student_id)
+
+    # Only show rooms that have space
     rooms = Room.objects.filter(current_occupancy__lt=F('capacity'))
 
     if request.method == "POST":
         room_id = request.POST.get("room_id")
         room = get_object_or_404(Room, id=room_id)
 
-        # Update room occupancy
+        # 1️⃣ Check if student already has a room
+        if student.room:
+            messages.error(request, "Student already has a room assigned!")
+            return redirect('assign_room', student_id=student_id)
+
+        # 2️⃣ Check if room is full
+        if room.current_occupancy >= room.capacity:
+            messages.error(request, "Room is already full!")
+            return redirect('assign_room', student_id=student_id)
+
+        # 3️⃣ Assign room properly
         room.current_occupancy += 1
         room.save()
 
-        # Assign room to student
         student.room = room
         student.save()
 
-        # Save allocation history
         Allocation.objects.create(
             student=student,
             room=room,
             allocated_by=request.user
         )
 
+        messages.success(request, "Room assigned successfully!")
         return redirect('admin_dashboard')
 
-    return render(request, 'assign_room.html', {'student': student, 'rooms': rooms})
+    return render(request, 'assign_room.html', {
+        'student': student,
+        'rooms': rooms
+    })
+
+def reassign_room(request, student_id):
+    student = get_object_or_404(StudentProfile, id=student_id)
+    rooms = Room.objects.filter(current_occupancy__lt=F('capacity'))
+
+    if request.method == "POST":
+        old_room = student.room  # previous room
+
+        room_id = request.POST.get("room_id")
+        new_room = get_object_or_404(Room, id=room_id)
+
+        # decrease old room occupancy
+        if old_room:
+            old_room.current_occupancy -= 1
+            old_room.save()
+
+        # increase new room occupancy
+        new_room.current_occupancy += 1
+        new_room.save()
+
+        # update student
+        student.room = new_room
+        student.save()
+
+        # save allocation history
+        Allocation.objects.create(
+            student=student,
+            room=new_room,
+            allocated_by=request.user
+        )
+
+        return redirect('admin_dashboard')
+
+    return render(request, 'reassign_room.html', {
+        'student': student,
+        'rooms': rooms,
+    })
 
 
 # room management
@@ -180,3 +231,5 @@ def delete_room(request, room_id):
     room = get_object_or_404(Room, id=room_id)
     room.delete()
     return redirect("room_list")
+
+

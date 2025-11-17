@@ -1,0 +1,48 @@
+{% extends 'master.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="card shadow-lg p-4" style="border-radius: 15px;">
+        <h3 class="text-center mb-4" style="font-weight:600;">Assign Room</h3>
+
+        <!-- Student Info -->
+        <div class="alert alert-info">
+            <strong>Roll No:</strong> {{ student.roll_no }} <br>
+            <strong>Student Name:</strong> {{ student.first_name }} {{ student.last_name }} <br>
+            <strong>Department:</strong> {{ student.department }} <br>
+            <strong>Year:</strong> {{ student.get_year_of_study_display }} <br>
+            <strong>Mobile:</strong> {{ student.mobile_no }}
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Room Dropdown -->
+            <div class="mb-3">
+                <label class="form-label"><strong>Select Room</strong></label>
+                <select name="room_id" class="form-select" required>
+                    <option value="">-- Select Available Room --</option>
+
+                    {% for room in rooms %}
+                        <option value="{{ room.id }}">
+                            Room {{ room.room_number }} -
+                            {{ room.room_type }} |
+                            Occupancy: {{ room.current_occupancy }}/{{ room.capacity }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary px-4">Back</a>
+                <button type="submit" class="btn btn-primary px-4">Assign Room</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}

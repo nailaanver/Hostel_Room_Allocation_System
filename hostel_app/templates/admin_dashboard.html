@@ -234,23 +234,10 @@
                     <th>Capacity</th>
                     <th>Occupied</th>
                     <th>Available</th>
-                    <th>Action</th>
+
                 </tr>
             </thead>
-            <tbody>
-                {% for r in available_rooms %}
-                <tr>
-                    <td>{{ r.room_number }}</td>
-                    <td>{{ r.room_type }}</td>
-                    <td>{{ r.capacity }}</td>
-                    <td>{{ r.current_occupancy }}</td>
-                    <td>{{ r.remaining_beds }}</td>
-                    <td>
-                        <a href="{% url 'allocate_room' r.id %}" class="btn-assign">Allocate</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+          
         </table>
     </div>
 

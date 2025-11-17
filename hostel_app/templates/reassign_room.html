@@ -1,0 +1,19 @@
+{% extends 'master.html' %}
+{% block content %}
+
+<h2>Reassign Room</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Select New Room</label>
+    <select name="room" required>
+        {% for room in rooms %}
+            <option value="{{ room.id }}">{{ room.room_number }} - {{ room.room_type }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Update Room</button>
+</form>
+
+{% endblock %}

@@ -18,6 +18,11 @@ urlpatterns = [
     path("rooms/add/", views.add_room, name="add_room"),
     path("rooms/edit/<int:room_id>/", views.edit_room, name="edit_room"),
     path("rooms/delete/<int:room_id>/", views.delete_room, name="delete_room"),
+    
+    path('reassign-room/<int:student_id>/', views.reassign_room, name='reassign_room'),
+
+
+
 
 
 
