@@ -206,6 +206,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>Student ID</th>
                     <th>Student</th>
                     <th>Room</th>
                     <th>Date</th>
@@ -214,7 +215,8 @@
             <tbody>
                 {% for a in recent_allocations %}
                 <tr>
-                    <td>{{ a.student.name }}</td>
+                    <td>{{ a.student.roll_no }}</td>
+                    <td>{{ a.student.first_name }}</td>
                     <td>{{ a.room.room_number }}</td>
                     <td>{{ a.created_at|date:"d/m/Y" }}</td>
                 </tr>

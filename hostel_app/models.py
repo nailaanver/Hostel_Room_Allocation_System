@@ -81,4 +81,5 @@ class Maintenance(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f"Maintenance - Room {self.room.room_number}"
+        return f"{self.student.first_name} {self.student.last_name} → Room {self.room.room_number}"
+

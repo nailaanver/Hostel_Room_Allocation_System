@@ -159,10 +159,10 @@ def reassign_room(request, student_id):
     rooms = Room.objects.filter(current_occupancy__lt=F('capacity'))
 
     if request.method == "POST":
-        old_room = student.room  # previous room
-
-        room_id = request.POST.get("room_id")
+        room_id = request.POST.get("room_id")  # FIXED
         new_room = get_object_or_404(Room, id=room_id)
+
+        old_room = student.room
 
         # decrease old room occupancy
         if old_room:
