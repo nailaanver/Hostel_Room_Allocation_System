@@ -1,48 +1,146 @@
 {% extends 'master.html' %}
 {% load static %}
-
 {% block content %}
-<div class="container mt-5">
 
-    <div class="card shadow-lg p-4" style="border-radius: 15px;">
-        <h3 class="text-center mb-4" style="font-weight:600;">Assign Room</h3>
+<!-- Bootstrap -->
+<link rel="stylesheet" 
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
-        <!-- Student Info -->
-        <div class="alert alert-info">
-            <strong>Roll No:</strong> {{ student.roll_no }} <br>
-            <strong>Student Name:</strong> {{ student.first_name }} {{ student.last_name }} <br>
-            <strong>Department:</strong> {{ student.department }} <br>
-            <strong>Year:</strong> {{ student.get_year_of_study_display }} <br>
-            <strong>Mobile:</strong> {{ student.mobile_no }}
-        </div>
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background: url("{% static 'images/bg.jpeg' %}") no-repeat center center/cover;
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        color: #f3f3f3;
+    }
 
-        <form method="POST">
-            {% csrf_token %}
+    .overlay-card {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 30px;
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+        transition: transform 0.3s, box-shadow 0.3s;
+        width: 100%;
+        max-width: 550px;
+    }
 
-            <!-- Room Dropdown -->
-            <div class="mb-3">
-                <label class="form-label"><strong>Select Room</strong></label>
-                <select name="room_id" class="form-select" required>
-                    <option value="">-- Select Available Room --</option>
+    .overlay-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
 
-                    {% for room in rooms %}
-                        <option value="{{ room.id }}">
-                            Room {{ room.room_number }} -
-                            {{ room.room_type }} |
-                            Occupancy: {{ room.current_occupancy }}/{{ room.capacity }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
+    h3 {
+        font-weight: 700;
+        color: #ff6b6b;
+        text-align: center;
+        margin-bottom: 25px;
+    }
 
-            <!-- Buttons -->
-            <div class="d-flex justify-content-between mt-4">
-                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary px-4">Back</a>
-                <button type="submit" class="btn btn-primary px-4">Assign Room</button>
-            </div>
+    .student-info {
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        color: #f3f3f3;
+    }
 
-        </form>
+    label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        color: #f3f3f3;
+    }
+
+    select.form-select {
+        border-radius: 12px;
+        padding: 12px 15px;
+        border: 1px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    select.form-select option {
+        color: #000;
+    }
+
+    select.form-select:focus {
+        border-color: #ff6b6b;
+        box-shadow: 0 0 6px rgba(255,107,107,0.5);
+        outline: none;
+    }
+
+    .btn-primary, .btn-secondary {
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 12px 25px;
+        transition: all 0.3s;
+        border: none;
+    }
+
+    .btn-primary {
+        background-color: #ff6b6b;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #e63946;
+    }
+
+    .btn-secondary {
+        background-color: rgba(255,255,255,0.2);
+        color: #f3f3f3;
+    }
+
+    .btn-secondary:hover {
+        background-color: rgba(255,255,255,0.35);
+    }
+
+</style>
+
+<div class="overlay-card">
+
+    <h3>Assign Room</h3>
+
+    <!-- Student Info -->
+    <div class="student-info">
+        <strong>Roll No:</strong> {{ student.roll_no }} <br>
+        <strong>Student Name:</strong> {{ student.first_name }} {{ student.last_name }} <br>
+        <strong>Department:</strong> {{ student.department }} <br>
+        <strong>Year:</strong> {{ student.get_year_of_study_display }} <br>
+        <strong>Mobile:</strong> {{ student.mobile_no }}
     </div>
 
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Room Dropdown -->
+        <div class="mb-3">
+            <label for="room_id">Select Room</label>
+            <select name="room_id" id="room_id" class="form-select" required>
+                <option value="">-- Select Available Room --</option>
+                {% for room in rooms %}
+                    <option value="{{ room.id }}">
+                        Room {{ room.room_number }} - {{ room.room_type }} | Occupancy: {{ room.current_occupancy }}/{{ room.capacity }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Back</a>
+            <button type="submit" class="btn btn-primary">Assign Room</button>
+        </div>
+
+    </form>
 </div>
+
 {% endblock %}

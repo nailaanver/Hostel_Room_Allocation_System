@@ -4,28 +4,65 @@
 {% block content %}
 <!-- BOOTSTRAP -->
     <link rel="stylesheet" 
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
 <style>
     body {
-        background: #f5f6fa;
+        background: url("{% static 'images/bg.jpeg' %}") no-repeat center center/cover;
+        background-attachment: fixed;
         font-family: "Poppins", sans-serif;
+        overflow-x: hidden;
     }
 
-    h2 {
-        font-weight: 700;
-        color: #111;
+    /* DARK OVERLAY */
+    .overlay {
+        background: rgba(0, 0, 0, 0.65);
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    /* ======= HEADER BAR ======= */
+    .admin-header {
+        background: rgba(0,0,0,0.7);
+        padding: 18px 30px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 25px;
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* ================== SUMMARY CARDS ================== */
+    .admin-header h2 {
+        margin: 0;
+        color: #ff4444;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .logout-btn {
+        background: #ff4444;
+        color: white !important;
+        padding: 8px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .logout-btn:hover {
+        background: #cc0000;
+    }
+
+    /* ======= SUMMARY CARDS ======= */
     .summary-card {
         padding: 22px;
         border-radius: 16px;
         color: white;
-        box-shadow: 0 6px 12px rgba(0,0,0,0.12);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        backdrop-filter: blur(8px);
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.25);
         transition: 0.3s ease;
     }
 
@@ -35,12 +72,12 @@
 
     .summary-content h4 {
         margin: 0;
-        font-size: 16px;
-        font-weight: 600;
+        font-size: 14px;
+        opacity: 0.8;
     }
 
     .summary-content h2 {
-        font-size: 36px;
+        font-size: 32px;
         margin-top: 5px;
         font-weight: 700;
     }
@@ -50,112 +87,107 @@
         opacity: 0.9;
     }
 
-    .bg-blue { background: #4287f5; }
-    .bg-green { background: #2ecc71; }
-    .bg-red { background: #e74c3c; }
-    .bg-orange { background: #f39c12; }
-
-    /* ================== WHITE BOX SECTIONS ================== */
+    /* ======= WHITE BOX (Glass Boxes) ======= */
     .white-box {
-        background: white;
+        background: rgba(255,255,255,0.08);
         padding: 25px;
         border-radius: 14px;
         margin-top: 30px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.18);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
 
     .white-box h5 {
         font-weight: 700;
         font-size: 18px;
-        color: #222;
+        color: #ff4444;
         margin-bottom: 16px;
     }
 
-    /* ================== TABLE ================== */
+    /* ======= TABLE ======= */
     table {
-        background: white;
-        border-collapse: collapse;
-        width: 100%;
+        background: rgba(0,0,0,0.3);
         border-radius: 10px;
         overflow: hidden;
+        color: white;
     }
 
     table thead th {
+        background: rgba(255,255,255,0.15);
+        padding: 12px;
+        color: #f3f3f3;
         font-size: 14px;
-        font-weight: 600;
-        background: #f3f3f3;
-        padding: 13px;
-        color: #555;
     }
 
     table tbody td {
-        padding: 12px;
-        font-size: 14px;
-        color: #333;
-        border-bottom: 1px solid #eee;
+        background: rgba(0,0,0,0.25);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding: 10px;
     }
 
-    table tbody tr:hover {
-        background: #f2f6ff;
+    table tbody tr:hover td {
+        background: rgba(255,255,255,0.08);
     }
 
-    /* ================== BUTTONS ================== */
-    .btn-assign {
-        background: #4287f5;
-        color: white !important;
-        padding: 6px 14px;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 13px;
-        border: none;
-    }
 
-    .btn-reassign {
-        background: #f39c12;
-        color: white !important;
-        padding: 6px 14px;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 13px;
-        border: none;
-    }
+/* ===== BADGES ===== */
+.badge-success {
+    background: #ff6b6b;  /* Matches dashboard red/pink tone */
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+}
 
-    /* ================== BADGES ================== */
-    .badge-success {
-        background: #2ecc71;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-weight: 600;
-        color: white;
-    }
+.badge-danger {
+    background: rgba(1, 0, 0, 0.854);  /* Semi-transparent for "Not Assigned" */
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #f3f3f3;
+}
 
-    .badge-danger {
-        background: #e74c3c;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-weight: 600;
-        color: white;
-    }
+/* ===== BUTTONS ===== */
+.btn-assign {
+    background: #ff6b6b;  /* Primary pink/red tone */
+    color: white !important;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-assign:hover {
+    background: #e63946;  /* Darker shade on hover */
+}
+
+.btn-reassign {
+    background: #f4a261;  /* Soft orange tone matching dashboard accent */
+    color: white !important;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-reassign:hover {
+    background: #e07b3c;  /* Darker orange on hover */
+}
+
 
 </style>
-<div style="
-    background: white;
-    padding: 15px 25px;
-    border-radius: 10px;
-    margin-bottom: 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-">
-    <h2 style="margin: 0; font-weight: 700; color: #333;">Admin Dashboard</h2>
 
-    <a href="{% url 'logout' %}" 
-       class="btn btn-danger"
-       style="padding: 8px 18px; font-weight: 600; border-radius: 6px;">
-       Logout
-    </a>
-</div>
+<div class="overlay">
+
+    <div class="admin-header">
+        <h2>ADMIN DASHBOARD</h2>
+
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+
 
 <div class="container dashboard-container">
 
