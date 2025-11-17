@@ -6,8 +6,7 @@ from .models import StudentProfile,Room,Allocation
 from django.contrib.auth import logout
 from django.db import models
 from django.db.models import F
-
-
+from django.contrib.auth.decorators import login_required
 
 
 def register_student(request):
@@ -84,8 +83,22 @@ def logout_user(request):
     logout(request)
     return redirect('login')
 
+@login_required(login_url='login')
 def student_dashboard(request):
-    return render(request,'student_dashboard.html')
+    student = None
+    assigned_room = None
+
+    try:
+        student = StudentProfile.objects.get(user=request.user)
+        assigned_room = student.room
+    except StudentProfile.DoesNotExist:
+        student = None
+
+    return render(request, 'student_dashboard.html', {
+        "student": student,
+        "assigned_room": assigned_room
+    })
+
 
 def admin_dashboard(request):
     total_rooms = Room.objects.count()
@@ -193,7 +206,7 @@ def reassign_room(request, student_id):
 
 
 # room management
-
+@login_required
 def add_room(request):
     if request.method == "POST":
         room_number = request.POST.get("room_number")
