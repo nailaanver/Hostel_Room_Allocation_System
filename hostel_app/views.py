@@ -86,6 +86,7 @@ def logout_user(request):
 
 def student_dashboard(request):
     return render(request,'student_dashboard.html')
+
 def admin_dashboard(request):
     total_rooms = Room.objects.count()
     occupied_rooms = Room.objects.filter(current_occupancy__gte=1).count()

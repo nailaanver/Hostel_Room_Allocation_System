@@ -227,18 +227,35 @@
     <div class="white-box">
         <h5>Available Rooms</h5>
         <table class="table">
-            <thead>
-                <tr>
-                    <th>Room No</th>
-                    <th>Type</th>
-                    <th>Capacity</th>
-                    <th>Occupied</th>
-                    <th>Available</th>
+    <thead>
+        <tr>
+            <th>Room No</th>
+            <th>Type</th>
+            <th>Capacity</th>
+            <th>Occupied</th>
+            <th>Available</th>
+        </tr>
+    </thead>
 
-                </tr>
-            </thead>
-          
-        </table>
+    <tbody>
+        {% for r in available_rooms %}
+        <tr>
+            <td>{{ r.room_number }}</td>
+            <td>{{ r.room_type }}</td>
+            <td>{{ r.capacity }}</td>
+            <td>{{ r.current_occupancy }}</td>
+            <td>{{ r.remaining_beds }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center text-muted">
+                No available rooms
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
     </div>
 
     <!-- STUDENT STATUS -->
