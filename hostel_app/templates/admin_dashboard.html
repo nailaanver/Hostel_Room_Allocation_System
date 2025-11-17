@@ -138,10 +138,30 @@
     }
 
 </style>
+<div style="
+    background: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+">
+    <h2 style="margin: 0; font-weight: 700; color: #333;">Admin Dashboard</h2>
+
+    <a href="{% url 'logout' %}" 
+       class="btn btn-danger"
+       style="padding: 8px 18px; font-weight: 600; border-radius: 6px;">
+       Logout
+    </a>
+</div>
 
 <div class="container dashboard-container">
 
-    <h2 class="text-center">Admin Dashboard</h2>
+    
+<!-- 
+    <h2 class="text-center">Admin Dashboard</h2> -->
 
     <!-- SUMMARY CARDS -->
     <div class="row g-3">
