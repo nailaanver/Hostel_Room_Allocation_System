@@ -1,20 +1,96 @@
 {% extends 'master.html' %}
 {% block content %}
 
-<h2>Reassign Room</h2>
+<!-- Bootstrap -->
+<link rel="stylesheet" 
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 
-<form method="POST">
-    {% csrf_token %}
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background: #f0f2f5;
+    }
 
-    <label>Select New Room</label>
-    <select name="room_id" required>
-    {% for room in rooms %}
-        <option value="{{ room.id }}">{{ room.room_number }} - {{ room.room_type }}</option>
-    {% endfor %}
-</select>
+    .card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
+    h2 {
+        font-weight: 700;
+        color: #2c3e50;
+    }
 
-    <button type="submit">Update Room</button>
-</form>
+    label {
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    select {
+        border-radius: 8px !important;
+        padding: 10px;
+    }
+
+    .btn-update {
+        background: #27ae60;
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+    }
+
+    .btn-update:hover {
+        background: #1e8449;
+        color: white;
+    }
+
+    .btn-cancel {
+        background: #7f8c8d;
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .btn-cancel:hover {
+        background: #707b7c;
+        color: white;
+    }
+</style>
+
+<div class="container d-flex justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card p-4">
+
+            <h2 class="text-center mb-4">Reassign Room</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <label>Select New Room</label>
+                <select name="room_id" class="form-control" required>
+                    {% for room in rooms %}
+                        <option value="{{ room.id }}">{{ room.room_number }} - {{ room.room_type }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="btn btn-update">Update Room</button>
+
+                <button type="button" 
+                        onclick="history.back()" 
+                        class="btn btn-cancel">
+                    Cancel
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
 
 {% endblock %}
